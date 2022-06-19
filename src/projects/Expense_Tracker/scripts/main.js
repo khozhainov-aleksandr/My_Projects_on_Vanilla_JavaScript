@@ -10,30 +10,38 @@ const amountEl = document.querySelector('#amount');
 
 formEl.addEventListener('submit', addTransaction);
 
-const localStorageTransactions = JSON.parse(localStorage.getItem('transactions'));
-let transactions = localStorage.getItem('transactions') !== null ? localStorageTransactions : [];
+const localStorageTransactions = (
+  // eslint-disable-next-line no-undef
+  JSON.parse(localStorage.getItem('transactions'))
+);
 
-// Add transaction to DOM list
+// eslint-disable-next-line no-undef
+let transactions = localStorage.getItem('transactions') !== null
+  ? localStorageTransactions
+  : [];
+
 function addTransactionToDOM(transaction) {
   const sign = transaction.amount < 0 ? '-' : '+';
   const item = document.createElement('li');
 
   item.classList.add(transaction.amount < 0 ? 'minus' : 'plus');
 
-  item.innerHTML = `${transaction.text} 
-		<span>${sign}${Math.abs(transaction.amount)}</span> 
-		<button class="delete-btn" onclick="removeTransaction(${transaction.id})">X</button>
-	`;
+  item.innerHTML = `${transaction.text}
+    <span>${sign}${Math.abs(transaction.amount)}</span>
+    <button class="delete-btn" onclick="removeTransaction(
+      ${transaction.id}
+    )">X</button>
+  `;
 
   listEl.appendChild(item);
 }
 
-// Add transaction
 function addTransaction(event) {
   event.preventDefault();
 
   if (textEl.value.trim() === '' || amountEl.value.trim() === '') {
-    console.log('Please add a Text and Amount');
+    // eslint-disable-next-line no-undef
+    alert('Please add a Text and Amount');
   } else {
     const transaction = {
       id: generateID(),
@@ -55,17 +63,17 @@ function generateID() {
   return Math.floor(Math.random() * 1000000000);
 }
 
-// Update the balance, income and expense
 function updateValues() {
   const amounts = transactions.map((transaction) => transaction.amount);
-  const total = amounts.reduce((acc, item) => (acc += item), 0).toFixed(2);
+  const total = amounts
+    .reduce((acc, item) => (acc + item), 0).toFixed(2);
 
   const income = amounts.filter((item) => (item > 0))
-    .reduce((acc, item) => (acc += item), 0)
+    .reduce((acc, item) => (acc + item), 0)
     .toFixed(2);
 
   const expense = Math.abs(amounts.filter((item) => (item < 0))
-    .reduce((acc, item) => (acc += item), 0))
+    .reduce((acc, item) => (acc + item), 0))
     .toFixed(2);
 
   balanceEl.textContent = `$${total}`;
@@ -73,26 +81,24 @@ function updateValues() {
   moneyMinusEl.textContent = `$${expense}`;
 }
 
-// Remove transaction by ID
+// eslint-disable-next-line no-unused-vars
 function removeTransaction(id) {
   transactions = transactions.filter((transaction) => transaction.id !== id);
   updateLocalStorage();
   init();
 }
 
-// Update local storage transactions
 function updateLocalStorage() {
+  // eslint-disable-next-line no-undef
   localStorage.setItem('transactions', JSON.stringify(transactions));
 }
 
-// Init app on this page
 function init() {
   listEl.innerHTML = '';
   transactions.forEach((addTransactionToDOM));
   updateValues();
 }
 
-// Clear value after push to history
 function clearValue(itemValue) {
   itemValue.value = '';
 }
